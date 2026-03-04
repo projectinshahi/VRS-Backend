@@ -7,28 +7,23 @@ const webinarSchema = new mongoose.Schema(
       required: true,
     },
 
-    description: {
-      type: String,
-    },
+    description: String,
 
-    // ✅ REAL DATE & TIME
     startDateTime: {
       type: Date,
       required: true,
     },
 
-    // ✅ BASE TIMEZONE
+    // ✅ Store short timezone directly
     australiaTimeZone: {
       type: String,
       required: true,
       enum: [
-        "Australia/Perth",
-        "Australia/Darwin",
-        "Australia/Brisbane",
-        "Australia/Sydney",
-        "Australia/Melbourne",
-        "Australia/Adelaide",
-        "Australia/Hobart",
+        "AWST",
+        "ACST",
+        "ACDT",
+        "AEST",
+        "AEDT",
       ],
     },
 
@@ -44,7 +39,7 @@ const webinarSchema = new mongoose.Schema(
 
     recordingLink: String,
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Webinar", webinarSchema);
