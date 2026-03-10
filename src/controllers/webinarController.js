@@ -1,20 +1,21 @@
 const Webinar = require("../models/webinarModel");
 
-
+ 
 
 exports.createWebinar = async (req, res) => {
   try {
     const {
       title,
       description,
-      startDateTime,
+      day,
+      time,
       australiaTimeZone,
       meetLink,
       recordingLink,
       durationMinutes,
     } = req.body;
 
-    if (!title || !startDateTime || !australiaTimeZone || !meetLink) {
+    if (!title || !day || !time || !australiaTimeZone || !meetLink) {
       return res.status(400).json({
         message: "Required fields missing",
       });
@@ -23,7 +24,8 @@ exports.createWebinar = async (req, res) => {
     const webinar = await Webinar.create({
       title,
       description,
-      startDateTime,
+      day,
+      time,
       australiaTimeZone,
       meetLink,
       recordingLink,
@@ -35,7 +37,6 @@ exports.createWebinar = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 
 /* ========================= */
