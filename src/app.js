@@ -15,8 +15,12 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const app = express();
 
 const allowedOrigins = [
-  process.env.USER_FRONTEND_URL,
-  process.env.ADMIN_FRONTEND_URL,
+  // process.env.USER_FRONTEND_URL,
+  // process.env.ADMIN_FRONTEND_URL,
+  "https://vrsrealinvest.com.au",
+    "https://www.vrsrealinvest.com.au",
+    "https://admin.vrsrealinvest.com.au"
+    "https://www.admin.vrsrealinvest.com.au"
 ];
 
 app.use(
