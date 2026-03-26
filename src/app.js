@@ -35,14 +35,17 @@ const app = express();
 //     credentials: true,
 //   }),
 // );
+// app.use(cors({
+//   origin: [
+//     "https://vrsrealinvest.com.au",
+//     "https://www.vrsrealinvest.com.au",
+//     "https://admin.vrsrealinvest.com.au",
+//     "https://snow-boar-395111.hostingersite.com"
+//   ],
+//   credentials: true
+// }));
 app.use(cors({
-  origin: [
-    "https://vrsrealinvest.com.au",
-    "https://www.vrsrealinvest.com.au",
-    "https://admin.vrsrealinvest.com.au",
-    "https://snow-boar-395111.hostingersite.com"
-  ],
-  credentials: true
+  origin: "*"
 }));
 app.use(express.json());
 
