@@ -14,28 +14,35 @@ const blogRoutes = require("./routes/blogRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const app = express();
 
-const allowedOrigins = [
-  // process.env.USER_FRONTEND_URL,
-  // process.env.ADMIN_FRONTEND_URL,
-  "https://vrsrealinvest.com.au",
+// const allowedOrigins = [
+//   // process.env.USER_FRONTEND_URL,
+//   // process.env.ADMIN_FRONTEND_URL,
+//   "https://vrsrealinvest.com.au",
+//     "https://www.vrsrealinvest.com.au",
+//     "https://admin.vrsrealinvest.com.au"
+//     "https://www.admin.vrsrealinvest.com.au"
+// ];
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//   }),
+// );
+app.use(cors({
+  origin: [
+    "https://vrsrealinvest.com.au",
     "https://www.vrsrealinvest.com.au",
     "https://admin.vrsrealinvest.com.au"
-    "https://www.admin.vrsrealinvest.com.au"
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  }),
-);
-
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
