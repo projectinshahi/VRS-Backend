@@ -16,12 +16,16 @@ exports.updateVideo = async (req, res) => {
   try {
     const { videoUrl } = req.body;
 
-    let thumbnailUrl;
+    if (!videoUrl) {
+      return res.status(400).json({ message: "Video URL required" });
+    }
+
+    let uploadedThumbnail = null;
 
     if (req.file) {
       const result = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { folder: "discover-video" },
+          { folder: "discover-video", resource_type: "image" },
           (error, result) => {
             if (error) reject(error);
             else resolve(result);
@@ -30,24 +34,36 @@ exports.updateVideo = async (req, res) => {
         stream.end(req.file.buffer);
       });
 
-      thumbnailUrl = result.secure_url;
+      uploadedThumbnail = {
+        url: result.secure_url,
+        public_id: result.public_id,
+      };
     }
 
     let video = await DiscoverVideo.findOne();
 
     if (!video) {
       video = await DiscoverVideo.create({
-        thumbnail: thumbnailUrl,
+        thumbnail: uploadedThumbnail,
         videoUrl,
       });
     } else {
+      // delete old thumbnail
+      if (uploadedThumbnail && video.thumbnail?.public_id) {
+        await cloudinary.uploader.destroy(video.thumbnail.public_id);
+      }
+
       video.videoUrl = videoUrl;
-      if (thumbnailUrl) video.thumbnail = thumbnailUrl;
+
+      if (uploadedThumbnail) {
+        video.thumbnail = uploadedThumbnail;
+      }
+
       await video.save();
     }
 
     res.json(video);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Server error" });
   }
 };

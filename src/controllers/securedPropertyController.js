@@ -140,13 +140,3 @@ exports.deleteProperty = async (req, res) => {
 };
 
 
-
-// GET COUNT
-exports.getPropertyCount = async (req, res) => {
-  try {
-    const count = await SecuredProperty.countDocuments();
-    res.json({ count });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};

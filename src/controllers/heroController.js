@@ -22,10 +22,7 @@ exports.getHero = async (req, res) => {
   }
 };
 
-/**
- * @desc   Create or Update Hero Section
- * @route  PUT /api/hero
- */
+
 
 exports.updateHero = async (req, res) => {
   try {
@@ -35,19 +32,22 @@ exports.updateHero = async (req, res) => {
       return res.status(400).json({ message: "Type required" });
     }
 
+    // ================= IMAGE UPLOAD =================
     if (type === "image") {
-      if (!req.files || req.files.length === 0) {
+      const files = req.files?.images;
+
+      if (!files || files.length === 0) {
         return res.status(400).json({ message: "Images required" });
       }
 
-      const uploadPromises = req.files.map((file) => {
+      const uploadPromises = files.map((file) => {
         return new Promise((resolve, reject) => {
           const stream = cloudinary.uploader.upload_stream(
-            { resource_type: "image" },
+            { resource_type: "image", folder: "hero" },
             (error, result) => {
               if (error) reject(error);
               else resolve(result.secure_url);
-            },
+            }
           );
           stream.end(file.buffer);
         });
@@ -57,15 +57,16 @@ exports.updateHero = async (req, res) => {
 
       const hero = await Hero.findOneAndUpdate(
         {},
-        { type: "image", images: uploadedImages },
-        { returnDocument: "after", upsert: true },
+        { type: "image", images: uploadedImages, videoUrl: "" },
+        { new: true, upsert: true }
       );
 
-      return res.json({ message: "Updated", hero });
+      return res.json({ message: "Images uploaded", hero });
     }
 
+    // ================= VIDEO UPLOAD =================
     if (type === "video") {
-      const file = req.file;
+      const file = req.files?.video?.[0];
 
       if (!file) {
         return res.status(400).json({ message: "Video required" });
@@ -73,11 +74,11 @@ exports.updateHero = async (req, res) => {
 
       const videoUrl = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-          { resource_type: "video" },
+          { resource_type: "video", folder: "hero" },
           (error, result) => {
             if (error) reject(error);
             else resolve(result.secure_url);
-          },
+          }
         );
         stream.end(file.buffer);
       });
@@ -85,10 +86,10 @@ exports.updateHero = async (req, res) => {
       const hero = await Hero.findOneAndUpdate(
         {},
         { type: "video", videoUrl, images: [] },
-        { returnDocument: "after", upsert: true },
+        { new: true, upsert: true }
       );
 
-      return res.json({ message: "Updated", hero });
+      return res.json({ message: "Video uploaded", hero });
     }
   } catch (error) {
     console.error(error);
