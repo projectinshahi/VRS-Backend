@@ -3,7 +3,6 @@ const Webinar = require("../models/webinarModel");
 const Team = require("../models/Team");
 const TextTestimonial = require("../models/TextTestimonial");
 const VideoTestimonial = require("../models/VideoTestimonial");
-const Contact = require("../models/ContactMessage"); // If you have enquiry/contact model
 
 exports.getDashboardStats = async (req, res) => {
   try {
@@ -37,8 +36,7 @@ exports.getDashboardStats = async (req, res) => {
       TextTestimonial.countDocuments(),
       VideoTestimonial.countDocuments(),
 
-      // Enquiries (optional model)
-      Contact ? Contact.countDocuments() : 0,
+   
 
       // Properties added this month
       SecuredProperty.countDocuments({
