@@ -29,7 +29,7 @@ router.put(
 router.delete("/:id", controller.deleteProperty);
 
 
-router.get("/count", controller.getPropertyCount);
+
 
 
 module.exports = router;

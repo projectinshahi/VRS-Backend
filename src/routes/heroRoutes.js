@@ -9,7 +9,11 @@ router.get("/", heroController.getHero);
 router.put(
   "/",
   authMiddleware,
-  upload.array("images", 10),
-  heroController.updateHero,
+  upload.fields([
+    { name: "images", maxCount: 10 },
+    { name: "video", maxCount: 1 },
+  ]),
+  heroController.updateHero
 );
+
 module.exports = router;
